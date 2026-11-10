@@ -8,18 +8,18 @@ export function Input({ label, type, className = '', ...rest }: Props) {
   const jeHeslo = type === 'password'
   return (
     <label className={`block ${className}`}>
-      <span className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-slate-500">{label}</span>
+      <span className="mb-1.5 block text-sm font-medium text-stone-700 dark:text-stone-300">{label}</span>
       <span className="relative block">
         <input
           {...rest}
           type={jeHeslo && ukazHeslo ? 'text' : type}
-          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-remexo-500 focus:ring-2 focus:ring-remexo-500/20 dark:border-slate-700 dark:bg-slate-900"
+          className="w-full rounded-lg border border-stone-300 bg-white px-3.5 py-2.5 outline-none transition-colors focus:border-remexo-500 focus:ring-3 focus:ring-remexo-500/15 dark:border-stone-700 dark:bg-stone-900"
         />
         {jeHeslo && (
           <button
             type="button"
             onClick={() => setUkazHeslo((v) => !v)}
-            className="absolute inset-y-0 right-3 text-slate-400 hover:text-slate-600"
+            className="absolute inset-y-0 right-3 text-stone-400 hover:text-stone-600"
             aria-label={ukazHeslo ? 'Skrýt heslo' : 'Zobrazit heslo'}
           >
             {ukazHeslo ? <EyeOff className="size-4" /> : <Eye className="size-4" />}

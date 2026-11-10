@@ -11,7 +11,11 @@ export type MojePoptavka = Poptavka & {
   odstoupeni: Odstoupeni | null
 }
 
-const PRIORITA: Record<string, number> = { active: 0, waiting: 1, cancelled: 2, done: 2 }
+/** Nahoře to, kde se čeká na zákazníka, pak rozjeté, čekající a nakonec uzavřené. */
+function priorita(p: MojePoptavka) {
+  if ((p.status === 'active' && p.dokonceni_navrzeno) || (p.status === 'waiting' && p.cekajiciNabidky > 0)) return 0
+  return { active: 1, waiting: 2 }[p.status as string] ?? 3
+}
 
 export function useMojePoptavky() {
   const { user } = useAuth()
@@ -49,7 +53,7 @@ export function useMojePoptavky() {
 
       return poptavky
         .map((p) => ({ ...p, cekajiciNabidky: pocty.get(p.id) ?? 0, odstoupeni: posledniOdstoupeni.get(p.id) ?? null }))
-        .sort((a, b) => (PRIORITA[a.status] ?? 1) - (PRIORITA[b.status] ?? 1) || b.created_at.localeCompare(a.created_at))
+        .sort((a, b) => priorita(a) - priorita(b) || b.created_at.localeCompare(a.created_at))
     },
   })
 }
