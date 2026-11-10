@@ -1,29 +1,29 @@
-import { ClipboardList, Hammer, MapPinned, MessageCircle, ShieldCheck, User, Wallet, type LucideIcon } from 'lucide-react'
+import { Briefcase, ClipboardList, House, Map, MessageCircle, Send, User, Wallet, type LucideIcon } from 'lucide-react'
 import type { Role } from '@/lib/types'
 
-export type PolozkaNavigace = { cesta: string; nazev: string; ikona: LucideIcon; bublina?: 'nabidky' }
+export type Bublina = 'nabidky'
+export type PolozkaNavigace = { cesta: string; nazev: string; kratce?: string; ikona: LucideIcon; bublina?: Bublina }
 
 export const NAVIGACE: Record<Role, PolozkaNavigace[]> = {
   customer: [
-    { cesta: '/poptavky', nazev: 'Moje poptávky', ikona: ClipboardList, bublina: 'nabidky' },
+    { cesta: '/', nazev: 'Přehled', ikona: House },
+    { cesta: '/poptavky', nazev: 'Moje poptávky', kratce: 'Poptávky', ikona: ClipboardList, bublina: 'nabidky' },
     { cesta: '/zpravy', nazev: 'Zprávy', ikona: MessageCircle },
-    { cesta: '/platby', nazev: 'Platby', ikona: ShieldCheck },
     { cesta: '/profil', nazev: 'Profil', ikona: User },
   ],
   craftsman: [
-    { cesta: '/trziste', nazev: 'Tržiště', ikona: MapPinned },
-    { cesta: '/prace', nazev: 'Moje práce', ikona: Hammer },
+    { cesta: '/', nazev: 'Přehled', ikona: House },
+    { cesta: '/trziste', nazev: 'Tržiště', ikona: Map },
+    { cesta: '/nabidky', nazev: 'Moje nabídky', kratce: 'Nabídky', ikona: Send },
+    { cesta: '/zakazky', nazev: 'Moje zakázky', kratce: 'Zakázky', ikona: Briefcase },
     { cesta: '/zpravy', nazev: 'Zprávy', ikona: MessageCircle },
     { cesta: '/vydelky', nazev: 'Výdělky', ikona: Wallet },
     { cesta: '/profil', nazev: 'Profil', ikona: User },
   ],
 }
 
-export const DOMOVSKA_STRANKA: Record<Role, string> = { customer: '/poptavky', craftsman: '/trziste' }
-
-/** Nadpis do hlavičky podle aktuální adresy. */
-export function nadpisStranky(cesta: string, role: Role): string {
-  if (cesta.startsWith('/nova')) return 'Nová poptávka'
-  if (/^\/poptavky\/\d+/.test(cesta)) return 'Detail poptávky'
-  return NAVIGACE[role].find((p) => cesta.startsWith(p.cesta))?.nazev ?? ''
+/** Na mobilu nejvýš pět položek. Zákazník má uprostřed tlačítko pro novou poptávku. */
+export const MOBILNI: Record<Role, (PolozkaNavigace | 'nova')[]> = {
+  customer: [NAVIGACE.customer[0], NAVIGACE.customer[1], 'nova', NAVIGACE.customer[2], NAVIGACE.customer[3]],
+  craftsman: [NAVIGACE.craftsman[0], NAVIGACE.craftsman[1], NAVIGACE.craftsman[3], NAVIGACE.craftsman[4], NAVIGACE.craftsman[6]],
 }

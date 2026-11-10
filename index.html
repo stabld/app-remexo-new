@@ -7,11 +7,12 @@
     <meta name="theme-color" content="#f59e0b" />
     <title>Remexo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <script>
+      // Výchozí je světlý režim; tmavý jen když si ho uživatel zvolil (nebo zvolil „podle zařízení“).
       try {
-        var t = localStorage.getItem('color-theme')
-        if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark')
+        var t = localStorage.getItem('remexo-tema')
+        if (t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark')
       } catch (e) {}
     </script>
   </head>

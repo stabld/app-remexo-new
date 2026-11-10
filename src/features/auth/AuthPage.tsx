@@ -103,7 +103,7 @@ export function AuthPage() {
         {!role ? (
           <div>
             <h2 className="text-center text-2xl font-semibold tracking-tight">Vítej v aplikaci</h2>
-            <p className="mb-6 mt-1 text-center text-stone-500">Vyber, jak chceš Remexo používat</p>
+            <p className="mb-6 mt-1 text-center text-muted">Vyber, jak chceš Remexo používat</p>
             <div className="space-y-3">
               <KartaRole
                 ikona={<House />}
@@ -122,19 +122,19 @@ export function AuthPage() {
         ) : (
           <div>
             <div className="mb-4 flex items-center justify-between">
-              <button onClick={() => setRole(null)} className="flex items-center gap-1 text-sm font-semibold text-stone-500 hover:text-stone-800">
+              <button onClick={() => setRole(null)} className="flex items-center gap-1 text-sm font-semibold text-muted hover:text-ink">
                 <ArrowLeft className="size-4" /> Zpět
               </button>
-              <span className="text-sm text-stone-500">Jako {ROLE_LABEL[role].toLowerCase()}</span>
+              <span className="text-sm text-muted">Jako {ROLE_LABEL[role].toLowerCase()}</span>
             </div>
 
             {zalozka !== 'forgot' && (
-              <div className="mb-6 grid grid-cols-2 rounded-lg bg-stone-100 p-1 dark:bg-stone-900">
+              <div className="mb-6 grid grid-cols-2 rounded-lg bg-surface-2 p-1">
                 {(['login', 'register'] as const).map((z) => (
                   <button
                     key={z}
                     onClick={() => prepni(z)}
-                    className={`rounded-md py-2 text-sm font-semibold transition-colors ${zalozka === z ? 'bg-white shadow-sm dark:bg-stone-800' : 'text-stone-500'}`}
+                    className={`rounded-md py-2 text-sm font-semibold transition-colors ${zalozka === z ? 'bg-surface shadow-sm' : 'text-muted'}`}
                   >
                     {z === 'login' ? 'Přihlášení' : 'Registrace'}
                   </button>
@@ -143,7 +143,7 @@ export function AuthPage() {
             )}
 
             {hlaska && (
-              <p className={`mb-4 rounded-lg p-3 text-sm ${hlaska.typ === 'chyba' ? 'bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300' : 'bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300'}`}>
+              <p className={`mb-4 rounded-lg p-3 text-sm ${hlaska.typ === 'chyba' ? 'bg-[#FEF3F2] text-danger-text' : 'bg-success-soft text-success-text'}`}>
                 {hlaska.text}
               </p>
             )}
@@ -152,15 +152,15 @@ export function AuthPage() {
               <form onSubmit={prihlasit} className="space-y-4">
                 <Input label="E-mail" name="email" type="email" autoComplete="email" required />
                 <Input label="Heslo" name="heslo" type="password" autoComplete="current-password" required />
-                <button type="button" onClick={() => prepni('forgot')} className="text-sm text-stone-500 hover:text-stone-900 dark:hover:text-white">
+                <button type="button" onClick={() => prepni('forgot')} className="text-sm text-muted hover:text-ink">
                   Zapomenuté heslo?
                 </button>
                 <Button type="submit" loading={pracuji} className="w-full">Přihlásit se</Button>
-                <div className="flex items-center gap-3 text-xs text-stone-400">
-                  <span className="h-px flex-1 bg-stone-200 dark:bg-stone-700" /> nebo se přihlas přes <span className="h-px flex-1 bg-stone-200 dark:bg-stone-700" />
+                <div className="flex items-center gap-3 text-xs text-faint">
+                  <span className="h-px flex-1 bg-line" /> nebo se přihlas přes <span className="h-px flex-1 bg-line" />
                 </div>
                 {/* Facebook zůstává skrytý, dokud Meta neověří firmu */}
-                <Button type="button" variant="secondary" onClick={() => prihlasPres('google')} className="w-full">
+                <Button type="button" varianta="secondary" onClick={() => prihlasPres('google')} className="w-full">
                   Google
                 </Button>
               </form>
@@ -172,11 +172,11 @@ export function AuthPage() {
                 <Input label="E-mail" name="email" type="email" autoComplete="email" required />
                 <Input label="Heslo (min. 8 znaků, 1 velké, 1 číslo)" name="heslo" type="password" autoComplete="new-password" required />
                 <Input label="Heslo znovu" name="heslo2" type="password" autoComplete="new-password" required />
-                <label className="flex items-start gap-2 text-sm text-stone-600 dark:text-stone-400">
-                  <input type="checkbox" name="souhlas" className="mt-1 accent-remexo-500" />
+                <label className="flex items-start gap-2 text-sm text-soft">
+                  <input type="checkbox" name="souhlas" className="mt-1 accent-[var(--accent)]" />
                   <span>
-                    Souhlasím s <a href="/podminky" target="_blank" className="text-stone-900 underline dark:text-white">podmínkami použití</a> a{' '}
-                    <a href="/soukromi.html" target="_blank" className="text-stone-900 underline dark:text-white">zpracováním osobních údajů</a>.
+                    Souhlasím s <a href="/podminky" target="_blank" className="text-ink underline">podmínkami použití</a> a{' '}
+                    <a href="/soukromi.html" target="_blank" className="text-ink underline">zpracováním osobních údajů</a>.
                   </span>
                 </label>
                 <Button type="submit" loading={pracuji} className="w-full">Vytvořit účet</Button>
@@ -185,10 +185,10 @@ export function AuthPage() {
 
             {zalozka === 'forgot' && (
               <form onSubmit={obnovit} className="space-y-4">
-                <p className="text-sm text-stone-500">Zadej svůj e-mail a my ti pošleme odkaz pro obnovení hesla.</p>
+                <p className="text-sm text-muted">Zadej svůj e-mail a my ti pošleme odkaz pro obnovení hesla.</p>
                 <Input label="E-mail" name="email" type="email" autoComplete="email" required />
                 <Button type="submit" loading={pracuji} className="w-full">Odeslat odkaz</Button>
-                <Button type="button" variant="ghost" onClick={() => prepni('login')} className="w-full">Zpět na přihlášení</Button>
+                <Button type="button" varianta="ghost" onClick={() => prepni('login')} className="w-full">Zpět na přihlášení</Button>
               </form>
             )}
           </div>
@@ -202,12 +202,12 @@ function KartaRole(props: { ikona: React.ReactNode; nadpis: string; popis: strin
   return (
     <button
       onClick={props.onClick}
-      className="flex w-full items-center gap-4 rounded-xl border border-stone-200 p-4 text-left transition-colors hover:border-stone-400 dark:border-stone-800 dark:hover:border-stone-600"
+      className="flex w-full items-center gap-4 rounded-xl border border-line p-4 text-left transition-colors hover:border-line-strong"
     >
-      <span className="grid size-11 shrink-0 place-items-center rounded-lg bg-remexo-50 text-remexo-600 dark:bg-remexo-500/10">{props.ikona}</span>
+      <span className="grid size-11 shrink-0 place-items-center rounded-lg bg-accent-soft text-accent-text">{props.ikona}</span>
       <span>
         <span className="block font-semibold">{props.nadpis}</span>
-        <span className="block text-sm text-stone-500">{props.popis}</span>
+        <span className="block text-sm text-muted">{props.popis}</span>
       </span>
     </button>
   )

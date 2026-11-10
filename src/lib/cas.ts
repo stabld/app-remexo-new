@@ -32,3 +32,23 @@ export function stariPoptavky(datum: string | null | undefined): Stari | null {
   if (dnu < 31) return { text: `před ${dnu} dny`, cerstve: false, minut }
   return { text: d.toLocaleDateString('cs'), cerstve: false, minut }
 }
+
+/** „dnes 9:15“, „včera 18:02“, „9. 11. 14:20“ – pro historii a aktivitu. */
+export function relativniCas(datum: string | null | undefined): string {
+  const d = parsujDatum(datum)
+  if (!d) return ''
+  const cas = d.toLocaleTimeString('cs', { hour: 'numeric', minute: '2-digit' })
+  const dnes = new Date()
+  const vcera = new Date(dnes.getFullYear(), dnes.getMonth(), dnes.getDate() - 1)
+  if (d.toDateString() === dnes.toDateString()) return `dnes ${cas}`
+  if (d.toDateString() === vcera.toDateString()) return `včera ${cas}`
+  return `${kratkeDatum(datum)} ${cas}`
+}
+
+/** „9. 11.“, s rokem jen když není letošní. */
+export function kratkeDatum(datum: string | null | undefined): string {
+  const d = parsujDatum(datum)
+  if (!d) return ''
+  const letos = d.getFullYear() === new Date().getFullYear()
+  return d.toLocaleDateString('cs', { day: 'numeric', month: 'numeric', ...(letos ? {} : { year: 'numeric' }) })
+}

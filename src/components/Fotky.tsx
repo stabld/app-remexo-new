@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type { StaraFotka } from '@/lib/popis'
+import { FotkaMisto } from './ui/FotkaMisto'
 
 /**
  * Bucket „poptavky“ je neveřejný – na fotky se vystavují dočasné podepsané odkazy (1 h).
@@ -19,29 +20,29 @@ function usePodepsaneOdkazy(cesty: string[]) {
   })
 }
 
-function useZdroje(soubory: string[], stare: StaraFotka[]) {
+function useZdroje(soubory: string[], stare: StaraFotka[] = []) {
   const { data: odkazy = [] } = usePodepsaneOdkazy(soubory)
   return [...odkazy, ...stare.map((f) => `data:${f.mime || 'image/jpeg'};base64,${f.data}`)]
 }
 
-/** Všechny fotky závady v řadě, po kliknutí v plné velikosti. */
-export function Fotky({ soubory, stare = [] }: { soubory: string[]; stare?: StaraFotka[] }) {
+/** Galerie fotek závady, po kliknutí v plné velikosti. */
+export function Fotky({ soubory, stare }: { soubory: string[]; stare?: StaraFotka[] }) {
   const zdroje = useZdroje(soubory, stare)
   if (!zdroje.length) return null
   return (
-    <div className="flex flex-wrap gap-2">
-      {zdroje.map((src) => (
-        <a key={src.slice(0, 120)} href={src} target="_blank" rel="noreferrer">
-          <img src={src} alt="Fotka závady" className="size-24 rounded-lg bg-stone-100 object-cover hover:opacity-90 dark:bg-stone-800" />
+    <div className="grid grid-cols-3 gap-2.5">
+      {zdroje.map((src, i) => (
+        <a key={src.slice(0, 120)} href={src} target="_blank" rel="noreferrer" className="block aspect-[4/3] overflow-hidden rounded-[10px] bg-placeholder">
+          <img src={src} alt={`Fotka závady ${i + 1}`} className="size-full object-cover transition-opacity hover:opacity-90" />
         </a>
       ))}
     </div>
   )
 }
 
-/** Malý náhled první fotky do řádku seznamu. Bez fotky nic nevykreslí. */
-export function Nahled({ soubory, stare = [] }: { soubory: string[]; stare?: StaraFotka[] }) {
-  const [prvni] = useZdroje(soubory.slice(0, 1), stare.slice(0, 1))
-  if (!prvni) return null
-  return <img src={prvni} alt="" className="size-14 shrink-0 rounded-lg bg-stone-100 object-cover dark:bg-stone-800" />
+/** Náhled první fotky; bez fotky šedé místo stejné velikosti. */
+export function Nahled({ soubory, stare, className = 'size-[72px]' }: { soubory: string[]; stare?: StaraFotka[]; className?: string }) {
+  const [prvni] = useZdroje(soubory.slice(0, 1), (stare ?? []).slice(0, 1))
+  if (!prvni) return <FotkaMisto className={className} />
+  return <img src={prvni} alt="" className={`shrink-0 rounded-[10px] bg-placeholder object-cover ${className}`} />
 }

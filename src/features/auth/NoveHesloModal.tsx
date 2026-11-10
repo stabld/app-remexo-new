@@ -26,9 +26,9 @@ export function NoveHesloModal() {
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/50 p-4">
-      <form onSubmit={ulozit} className="w-full max-w-sm space-y-4 rounded-2xl bg-white p-6 dark:bg-stone-900">
+      <form onSubmit={ulozit} className="w-full max-w-sm space-y-4 rounded-2xl bg-surface p-6">
         <h2 className="text-lg font-semibold">Nastav si nové heslo</h2>
-        {chyba && <p className="rounded-xl bg-red-50 p-3 text-sm text-red-700">{chyba}</p>}
+        {chyba && <p className="rounded-xl bg-[#FEF3F2] p-3 text-sm text-danger-text dark:bg-danger/15">{chyba}</p>}
         <Input label="Nové heslo" name="heslo" type="password" autoComplete="new-password" required />
         <Button type="submit" loading={pracuji} className="w-full">Uložit heslo</Button>
       </form>

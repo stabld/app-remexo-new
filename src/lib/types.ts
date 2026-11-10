@@ -24,7 +24,8 @@ export type Poptavka = {
   lon: number | null
   craftsman_id: string | null
   craftsman_name: string | null
-  dokonceni_navrzeno: string | null
+  /** Řemeslník nahlásil dokončení (čas, případně příznak) */
+  dokonceni_navrzeno: string | boolean | null
   zruseno_kym: string | null
   zruseno_duvod: string | null
 }
@@ -36,9 +37,27 @@ export type Odstoupeni = {
   created_at: string
 }
 
-export const STAV_POPTAVKY: Record<StavPoptavky, { text: string; tecka: string }> = {
-  waiting: { text: 'Hledáme řemeslníka', tecka: 'bg-remexo-500' },
-  active: { text: 'Probíhá', tecka: 'bg-sky-500' },
-  done: { text: 'Hotovo', tecka: 'bg-emerald-500' },
-  cancelled: { text: 'Zrušeno', tecka: 'bg-stone-300 dark:bg-stone-600' },
+export type StavNabidky = 'pending' | 'accepted' | 'rejected'
+
+/** Řádek tabulky offers. Cena je v DB volný text („850 Kč“, „Dohodou“). */
+export type Nabidka = {
+  id: number
+  request_id: number
+  craftsman_id: string
+  craftsman_name: string | null
+  message: string | null
+  price: string | null
+  status: StavNabidky
+  created_at: string
+  pokusy?: number | null
+  duvod_odmitnuti?: string | null
 }
+
+/** Kódy musí odpovídat omezení offers_duvod_odmitnuti_check v databázi. */
+export const DUVODY_ODMITNUTI = [
+  { kod: 'cena', text: 'Cena je pro mě příliš vysoká' },
+  { kod: 'termin', text: 'Nevyhovuje mi termín' },
+  { kod: 'jiny_remeslnik', text: 'Vybral jsem jiného řemeslníka' },
+  { kod: 'nepotrebuji', text: 'Už to nepotřebuji nebo jsem to vyřešil jinak' },
+  { kod: 'jine', text: 'Jiný důvod' },
+] as const

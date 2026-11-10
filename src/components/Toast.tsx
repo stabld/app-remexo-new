@@ -20,12 +20,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasty.map((t) => (
           <div
             key={t.id}
-            className={`pointer-events-auto w-full max-w-sm rounded-xl border bg-white p-4 shadow-md dark:bg-stone-900 ${
-              t.typ === 'error' ? 'border-red-200' : t.typ === 'success' ? 'border-green-200' : 'border-stone-200 dark:border-stone-700'
+            className={`pointer-events-auto w-full max-w-sm rounded-[14px] border bg-surface p-4 shadow-raised ${
+              t.typ === 'error' ? 'border-danger' : 'border-line'
             }`}
           >
             <p className="text-sm font-semibold">{t.nadpis}</p>
-            {t.text && <p className="mt-0.5 text-sm text-stone-500">{t.text}</p>}
+            {t.text && <p className="mt-0.5 text-sm text-muted">{t.text}</p>}
           </div>
         ))}
       </div>
