@@ -1,9 +1,15 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --color-remexo-50: #fffbeb;
+  --color-remexo-100: #fef3c7;
   --color-remexo-500: #f59e0b;
   --color-remexo-600: #d97706;
-  --color-tma-900: #111827;
 }
 
-body { @apply bg-tma-900 text-gray-100 antialiased; }
+body {
+  @apply bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100;
+}
