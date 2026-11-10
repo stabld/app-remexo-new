@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@theme {
+  --color-remexo-500: #f59e0b;
+  --color-remexo-600: #d97706;
+  --color-tma-900: #111827;
+}
+
+body { @apply bg-tma-900 text-gray-100 antialiased; }
