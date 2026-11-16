@@ -13,12 +13,12 @@ export function Stranka({
   nadpis: string
   drobecky?: Drobecek[]
   akce?: ReactNode
-  sirka?: 'uzka' | 'normalni' | 'siroka' | 'plna'
+  sirka?: 'uzka' | 'normalni' | 'siroka' | 'prehled' | 'plna'
   /** false, když má stránka vlastní velký nadpis (přehled, detail) */
   nadpisNaMobilu?: boolean
   children: ReactNode
 }) {
-  const max = { uzka: 'max-w-[760px]', normalni: 'max-w-[1120px]', siroka: 'max-w-[1200px]', plna: 'max-w-none' }[sirka]
+  const max = { uzka: 'max-w-[760px]', normalni: 'max-w-[1120px]', siroka: 'max-w-[1200px]', prehled: 'max-w-[1640px]', plna: 'max-w-none' }[sirka]
   return (
     <>
       <header className="sticky top-0 z-20 hidden items-center gap-3 border-b border-line bg-surface px-10 py-4 lg:flex">

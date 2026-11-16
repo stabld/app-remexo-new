@@ -38,14 +38,14 @@ export function PrehledZakaznika() {
   const aktivita = posledniAktivita(poptavky, 6)
 
   return (
-    <Stranka nadpis="Přehled" nadpisNaMobilu={false}>
+    <Stranka nadpis="Přehled" nadpisNaMobilu={false} sirka="prehled">
       {isLoading ? (
         <NacitaniStranky />
       ) : isError ? (
         <p className="text-muted">Přehled se nepodařilo načíst. Zkontroluj připojení a obnov stránku.</p>
       ) : (
         <div className="flex flex-wrap items-start gap-x-10 gap-y-10">
-          <div className="flex min-w-0 flex-[2_1_560px] flex-col gap-10">
+          <div className="flex min-w-0 flex-[2.4_1_560px] flex-col gap-10">
             <header>
               <h2 className="text-[28px] font-semibold tracking-tight">Dobrý den, {vokativ(jmeno)}</h2>
               <p className="mt-1 text-base text-muted">
@@ -75,7 +75,7 @@ export function PrehledZakaznika() {
           </div>
 
           {aktivita.length > 0 && (
-            <aside className="flex min-w-0 flex-[1_1_260px] flex-col gap-4 lg:pt-[72px]" aria-labelledby="aktivita">
+            <aside className="flex min-w-0 flex-[1_1_300px] flex-col gap-4 rounded-[16px] border border-line bg-surface p-5 lg:mt-[72px]" aria-labelledby="aktivita">
               <div className="flex items-baseline">
                 <h3 id="aktivita" className="text-base font-semibold">Co se dělo</h3>
                 <Link to="/poptavky" className="ml-auto text-sm font-medium text-accent-text hover:underline">Všechny poptávky</Link>
