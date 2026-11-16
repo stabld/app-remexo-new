@@ -15,6 +15,8 @@ type AuthState = {
   setObnovaHesla: (v: boolean) => void
   /** Uloží roli vybranou před přihlášením (přežije i přesměrování z Googlu). */
   zapamatujRoli: (role: Role) => void
+  /** Přepne roli přihlášeného účtu. O přístupu rozhoduje databáze (RPC zmen_roli). */
+  prepniRoli: (role: Role) => Promise<void>
   odhlasit: () => Promise<void>
 }
 
@@ -101,6 +103,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     zapamatujRoli: (r) => {
       setRole(r)
       try { localStorage.setItem(PENDING_ROLE_KEY, r) } catch { /* nic */ }
+    },
+    prepniRoli: async (r) => {
+      const { error } = await supabase.rpc('zmen_roli', { p_role: r })
+      if (error) throw error
+      await supabase.auth.updateUser({ data: { role: r } })
+      setRole(r)
     },
     odhlasit: async () => {
       await supabase.auth.signOut()

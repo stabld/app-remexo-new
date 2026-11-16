@@ -8,6 +8,7 @@ import { PrehledZakaznika } from '@/features/requests/pages/PrehledZakaznika'
 import { MojePoptavky } from '@/features/requests/pages/MojePoptavky'
 import { DetailPoptavky } from '@/features/requests/pages/DetailPoptavky'
 import { Nastaveni } from '@/features/profile/Nastaveni'
+import { Profil } from '@/features/profile/Profil'
 import { Zpravy } from '@/features/chat/Zpravy'
 import { NovaPoptavka } from '@/features/requests/nova/NovaPoptavka'
 import type { Role } from '@/lib/types'
@@ -45,7 +46,7 @@ export const router = createBrowserRouter([
       // Obě role
       { path: '/zpravy', element: <Zpravy /> },
       { path: '/zpravy/:id', element: <Zpravy /> },
-      { path: '/profil', element: <Cast nazev="Profil" /> },
+      { path: '/profil', element: <Profil /> },
       { path: '/nastaveni', element: <Nastaveni /> },
       { path: '*', element: <Navigate to="/" replace /> },
     ],

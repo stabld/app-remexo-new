@@ -2,7 +2,7 @@ import { useId, useState, type InputHTMLAttributes, type ReactNode, type SelectH
 import { Eye, EyeOff } from 'lucide-react'
 
 const POLE =
-  'w-full rounded-[10px] border border-line-strong bg-surface px-3 py-2.5 text-[15px] text-ink placeholder:text-faint outline-none transition-colors focus:border-accent focus:ring-3 focus:ring-accent/20 aria-[invalid=true]:border-danger'
+  'w-full rounded-[10px] border border-line-strong bg-surface px-3 py-2.5 text-[15px] text-ink placeholder:text-faint outline-none transition-colors focus:border-accent focus:ring-3 focus:ring-accent/20 aria-[invalid=true]:border-danger disabled:cursor-not-allowed disabled:bg-surface-2 disabled:text-muted'
 
 type Obal = { label: string; napoveda?: ReactNode; chyba?: string; className?: string }
 

@@ -13,6 +13,19 @@ async function hledej(dotaz: string) {
   return data[0] ?? null
 }
 
+/** Přibližná poloha místa (zaokrouhlená na ~100 m), nebo null když se nenajde. */
+export async function geokoduj(misto: string): Promise<{ lat: number; lon: number } | null> {
+  try {
+    const bod = await hledej(misto)
+    if (!bod) return null
+    const lat = Math.round(parseFloat(bod.lat) * PRESNOST_POLOHY) / PRESNOST_POLOHY
+    const lon = Math.round(parseFloat(bod.lon) * PRESNOST_POLOHY) / PRESNOST_POLOHY
+    return Number.isNaN(lat) || Number.isNaN(lon) ? null : { lat, lon }
+  } catch {
+    return null
+  }
+}
+
 export type Overeni = { stav: 'v-oblasti'; lat: number; lon: number } | { stav: 'mimo' } | { stav: 'nenalezeno' }
 
 /** Najde adresu a ověří, že leží v oblasti, kde Remexo funguje. */
