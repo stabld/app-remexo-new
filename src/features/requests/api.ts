@@ -223,3 +223,25 @@ export function useSmazatPoptavku() {
     onSuccess: () => obnov(),
   })
 }
+
+/** Hodnocení a fotka řemeslníka pro kartu rozpracované zakázky. */
+export function useRemeslnik(id: string | null | undefined) {
+  return useQuery({
+    queryKey: ['remeslnik', id],
+    enabled: !!id,
+    staleTime: 5 * 60 * 1000,
+    queryFn: async () => {
+      const [h, p] = await Promise.all([
+        supabase.from('hodnoceni').select('hvezdicky').eq('craftsman_id', id!),
+        supabase.from('public_profiles').select('overeno, avatar_url').eq('id', id!).maybeSingle(),
+      ])
+      const hvezdy = ((h.data ?? []) as { hvezdicky: number }[]).map((x) => x.hvezdicky || 0)
+      return {
+        prumer: hvezdy.length ? hvezdy.reduce((a, b) => a + b, 0) / hvezdy.length : null,
+        pocet: hvezdy.length,
+        overeny: !!p.data?.overeno,
+        avatarUrl: (p.data?.avatar_url as string | null) ?? null,
+      }
+    },
+  })
+}

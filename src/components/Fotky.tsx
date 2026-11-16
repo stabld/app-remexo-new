@@ -40,6 +40,11 @@ export function Fotky({ soubory, stare }: { soubory: string[]; stare?: StaraFotk
   )
 }
 
+/** Odkaz na první fotku poptávky, nebo null. */
+export function useFotka(soubory: string[], stare?: StaraFotka[]): string | null {
+  return useZdroje(soubory.slice(0, 1), (stare ?? []).slice(0, 1))[0] ?? null
+}
+
 /** Náhled první fotky; bez fotky šedé místo stejné velikosti. */
 export function Nahled({ soubory, stare, className = 'size-[72px]' }: { soubory: string[]; stare?: StaraFotka[]; className?: string }) {
   const [prvni] = useZdroje(soubory.slice(0, 1), (stare ?? []).slice(0, 1))

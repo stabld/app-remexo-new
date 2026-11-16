@@ -1,31 +1,41 @@
 import { Link } from 'react-router-dom'
-import { Plus } from 'lucide-react'
+import { CheckCircle2, ClipboardPlus, Inbox, UserRoundX } from 'lucide-react'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { Stranka } from '@/layouts/Stranka'
-import { ButtonLink } from '@/components/ui/Button'
-import { Card } from '@/components/ui/Card'
 import { NacitaniStranky } from '@/components/NacitaniStranky'
 import { relativniCas } from '@/lib/cas'
 import { vokativ } from '@/lib/osloveni'
-import { useMojePoptavky } from '../api'
+import { useMojePoptavky, type MojePoptavka } from '../api'
 import { STAVY } from '../model'
-import { posledniAktivita } from '../aktivita'
-import { KartaNaTebe } from '../components/KartaNaTebe'
+import { posledniAktivita, type Udalost } from '../aktivita'
+import { HlavniZakazka } from '../components/HlavniZakazka'
 import { RadekAktivni } from '../components/RadekAktivni'
+import { RychlyStart } from '../components/RychlyStart'
 
+/** Na čem se teď nejvíc děje: nejdřív to, co čeká na zákazníka, pak rozjeté, pak nejnovější. */
+function poradi(p: MojePoptavka) {
+  return (STAVY[p.stav].naTebe ? 0 : p.status === 'active' ? 1 : 2)
+}
+
+function IkonaUdalosti({ u }: { u: Udalost }) {
+  const Ik = u.text.startsWith('Nová nabídka') ? Inbox : u.text.startsWith('Hlásí hotovo') ? CheckCircle2 : u.text.startsWith('Odstoupil') ? UserRoundX : ClipboardPlus
+  return (
+    <span className={`grid size-8 shrink-0 place-items-center rounded-full ${u.nova ? 'bg-accent-soft text-accent-text' : 'bg-surface-2 text-muted'}`} aria-hidden>
+      <Ik className="size-4" />
+    </span>
+  )
+}
 
 export function PrehledZakaznika() {
   const { jmeno } = useAuth()
   const { data: poptavky = [], isLoading, isError } = useMojePoptavky()
 
-  const naTebe = poptavky.filter((p) => STAVY[p.stav].naTebe)
-  const aktivni = poptavky.filter((p) => p.status === 'waiting' || p.status === 'active')
-  const aktivita = posledniAktivita(poptavky)
-
-  const podtitul =
-    naTebe.length === 0
-      ? aktivni.length ? 'Teď nic nečeká na tebe. Dáme vědět, až se něco pohne.' : 'Co potřebuješ opravit? Řemeslníci z okolí ti pošlou nabídky.'
-      : naTebe.length === 1 ? 'Jedna věc čeká na tvoje rozhodnutí.' : `${naTebe.length} věci čekají na tvoje rozhodnutí.`
+  const rozpracovane = poptavky
+    .filter((p) => p.status === 'waiting' || p.status === 'active')
+    .sort((a, b) => poradi(a) - poradi(b) || b.created_at.localeCompare(a.created_at))
+  const [hlavni, ...dalsi] = rozpracovane
+  const naTebe = rozpracovane.filter((p) => STAVY[p.stav].naTebe).length
+  const aktivita = posledniAktivita(poptavky, 6)
 
   return (
     <Stranka nadpis="Přehled" nadpisNaMobilu={false}>
@@ -34,53 +44,57 @@ export function PrehledZakaznika() {
       ) : isError ? (
         <p className="text-muted">Přehled se nepodařilo načíst. Zkontroluj připojení a obnov stránku.</p>
       ) : (
-        <div className="flex flex-col gap-8">
-          <section className="flex flex-wrap items-end gap-4">
-            <div className="min-w-0 flex-[1_1_360px]">
+        <div className="flex flex-wrap items-start gap-x-10 gap-y-10">
+          <div className="flex min-w-0 flex-[2_1_560px] flex-col gap-10">
+            <header>
               <h2 className="text-[28px] font-semibold tracking-tight">Dobrý den, {vokativ(jmeno)}</h2>
-              <p className="mt-1.5 text-base text-muted">{podtitul}</p>
-            </div>
-            <ButtonLink to="/nova" velikost="lg"><Plus className="size-[18px]" strokeWidth={2.2} /> Vytvořit poptávku</ButtonLink>
-          </section>
+              <p className="mt-1 text-base text-muted">
+                {!hlavni
+                  ? 'Co je potřeba doma opravit? Vyber obor a popiš to vlastními slovy.'
+                  : naTebe
+                    ? naTebe === 1 ? 'Jedna zakázka čeká na tvoje rozhodnutí.' : `${naTebe} zakázky čekají na tvoje rozhodnutí.`
+                    : rozpracovane.length === 1 ? 'Máš jednu rozpracovanou zakázku.' : `Máš ${rozpracovane.length} rozpracované zakázky.`}
+              </p>
+            </header>
 
-          {naTebe.length > 0 && (
-            <section className="flex flex-col gap-3" aria-labelledby="na-tebe">
-              <h3 id="na-tebe" className="text-base font-semibold">Čeká na tebe</h3>
-              <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-4">
-                {naTebe.map((p) => <KartaNaTebe key={p.id} poptavka={p} />)}
-              </div>
-            </section>
-          )}
-
-          {aktivni.length > 0 && (
-            <div className="flex flex-wrap items-start gap-6">
-              <section className="flex min-w-0 flex-[2_1_480px] flex-col gap-3" aria-labelledby="aktivni">
-                <div className="flex items-baseline">
-                  <h3 id="aktivni" className="text-base font-semibold">Aktivní poptávky</h3>
-                  <Link to="/poptavky" className="ml-auto text-sm font-medium text-accent-text hover:underline">Všechny poptávky</Link>
-                </div>
-                <Card className="divide-y divide-line overflow-hidden">
-                  {aktivni.map((p) => <RadekAktivni key={p.id} poptavka={p} />)}
-                </Card>
+            {hlavni && (
+              <section className="flex flex-col gap-3" aria-label="Rozpracované zakázky">
+                <HlavniZakazka poptavka={hlavni} />
+                {dalsi.length > 0 && (
+                  <div className="divide-y divide-line overflow-hidden rounded-[14px] border border-line bg-surface">
+                    {dalsi.map((p) => <RadekAktivni key={p.id} poptavka={p} />)}
+                  </div>
+                )}
               </section>
+            )}
 
-              {aktivita.length > 0 && (
-                <section className="flex min-w-0 flex-[1_1_280px] flex-col gap-3" aria-labelledby="aktivita">
-                  <h3 id="aktivita" className="text-base font-semibold">Poslední aktivita</h3>
-                  <ol className="flex flex-col gap-3.5 text-sm">
-                    {aktivita.map((u, i) => (
-                      <li key={i} className="flex gap-2.5">
-                        <span className={`mt-[7px] size-2 shrink-0 rounded-full ${u.nova ? 'bg-accent' : 'bg-line-strong'}`} aria-hidden />
-                        <Link to={`/poptavky/${u.poptavkaId}`} className="hover:underline">
-                          <span className={u.nova ? 'text-ink' : 'text-soft'}>{u.text}</span>
-                          <span className="block text-xs text-faint">{u.kde}, {relativniCas(u.kdy)}</span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ol>
-                </section>
-              )}
-            </div>
+            <section className="flex flex-col gap-3" aria-labelledby="novy">
+              <h3 id="novy" className="text-base font-semibold">{hlavni ? 'Potřebuješ opravit ještě něco?' : 'Vyber obor'}</h3>
+              <RychlyStart />
+            </section>
+          </div>
+
+          {aktivita.length > 0 && (
+            <aside className="flex min-w-0 flex-[1_1_260px] flex-col gap-4 lg:pt-[72px]" aria-labelledby="aktivita">
+              <div className="flex items-baseline">
+                <h3 id="aktivita" className="text-base font-semibold">Co se dělo</h3>
+                <Link to="/poptavky" className="ml-auto text-sm font-medium text-accent-text hover:underline">Všechny poptávky</Link>
+              </div>
+              <ol className="flex flex-col gap-4">
+                {aktivita.map((u, i) => (
+                  <li key={i}>
+                    <Link to={`/poptavky/${u.poptavkaId}`} className="flex gap-3 rounded-lg hover:opacity-80">
+                      <IkonaUdalosti u={u} />
+                      <span className="min-w-0 text-sm">
+                        <span className={u.nova ? 'font-medium' : 'text-soft'}>{u.text}</span>
+                        <span className="block truncate text-xs text-faint">{u.kde}</span>
+                        <span className="block text-xs text-faint">{relativniCas(u.kdy)}</span>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            </aside>
           )}
         </div>
       )}

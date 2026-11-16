@@ -37,7 +37,7 @@ export function Stranka({
         )}
         {akce && <div className="ml-auto flex items-center gap-2">{akce}</div>}
       </header>
-      <main className={`mx-auto w-full ${max} ${sirka === 'plna' ? '' : 'px-4 pb-28 pt-6 sm:px-6 lg:px-10 lg:pb-14 lg:pt-9'}`}>
+      <main className={`w-full ${max} ${sirka === 'plna' ? '' : 'px-4 pb-28 pt-6 sm:px-6 lg:px-10 lg:pb-14 lg:pt-9'}`}>
         {nadpisNaMobilu && (
           <div className={sirka === 'plna' ? 'px-4 pt-6 lg:hidden' : 'lg:hidden'}>
             <h1 className="mb-5 text-2xl font-semibold tracking-tight">{nadpis}</h1>
