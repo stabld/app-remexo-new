@@ -32,7 +32,7 @@ export function PrehledZakaznika() {
 
   const rozpracovane = poptavky
     .filter((p) => p.status === 'waiting' || p.status === 'active')
-    .sort((a, b) => poradi(a) - poradi(b) || b.created_at.localeCompare(a.created_at))
+    .sort((a, b) => poradi(a) - poradi(b) || (b.created_at ?? '').localeCompare(a.created_at ?? ''))
   const [hlavni, ...dalsi] = rozpracovane
   const naTebe = rozpracovane.filter((p) => STAVY[p.stav].naTebe).length
   const aktivita = posledniAktivita(poptavky, 6)

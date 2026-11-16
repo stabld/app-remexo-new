@@ -1,14 +1,14 @@
 import { Briefcase, ClipboardList, House, Map, MessageCircle, Send, User, Wallet, type LucideIcon } from 'lucide-react'
 import type { Role } from '@/lib/types'
 
-export type Bublina = 'nabidky'
+export type Bublina = 'nabidky' | 'zpravy'
 export type PolozkaNavigace = { cesta: string; nazev: string; kratce?: string; ikona: LucideIcon; bublina?: Bublina }
 
 export const NAVIGACE: Record<Role, PolozkaNavigace[]> = {
   customer: [
     { cesta: '/', nazev: 'Přehled', ikona: House },
     { cesta: '/poptavky', nazev: 'Moje poptávky', kratce: 'Poptávky', ikona: ClipboardList, bublina: 'nabidky' },
-    { cesta: '/zpravy', nazev: 'Zprávy', ikona: MessageCircle },
+    { cesta: '/zpravy', nazev: 'Zprávy', ikona: MessageCircle, bublina: 'zpravy' },
     { cesta: '/profil', nazev: 'Profil', ikona: User },
   ],
   craftsman: [
@@ -16,7 +16,7 @@ export const NAVIGACE: Record<Role, PolozkaNavigace[]> = {
     { cesta: '/trziste', nazev: 'Tržiště', ikona: Map },
     { cesta: '/nabidky', nazev: 'Moje nabídky', kratce: 'Nabídky', ikona: Send },
     { cesta: '/zakazky', nazev: 'Moje zakázky', kratce: 'Zakázky', ikona: Briefcase },
-    { cesta: '/zpravy', nazev: 'Zprávy', ikona: MessageCircle },
+    { cesta: '/zpravy', nazev: 'Zprávy', ikona: MessageCircle, bublina: 'zpravy' },
     { cesta: '/vydelky', nazev: 'Výdělky', ikona: Wallet },
     { cesta: '/profil', nazev: 'Profil', ikona: User },
   ],

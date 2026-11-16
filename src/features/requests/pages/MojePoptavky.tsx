@@ -19,7 +19,7 @@ export function MojePoptavky() {
     const aktivni = poptavky
       .filter((p) => p.status === 'waiting' || p.status === 'active')
       // nahoru to, co čeká na zákazníka, pak nejnovější
-      .sort((a, b) => Number(STAVY[b.stav].naTebe) - Number(STAVY[a.stav].naTebe) || b.created_at.localeCompare(a.created_at))
+      .sort((a, b) => Number(STAVY[b.stav].naTebe) - Number(STAVY[a.stav].naTebe) || (b.created_at ?? '').localeCompare(a.created_at ?? ''))
     return {
       aktivni,
       dokoncene: poptavky.filter((p) => p.status === 'done'),

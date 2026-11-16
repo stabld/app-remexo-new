@@ -33,7 +33,7 @@ export function KartaNaTebe({ poptavka: p }: { poptavka: MojePoptavka }) {
         <div className="mt-2 flex flex-wrap gap-2">
           <ButtonLink to={detail}>{potvrzeni ? 'Potvrdit a ohodnotit' : 'Porovnat nabídky'}</ButtonLink>
           {potvrzeni && (
-            <ButtonLink to="/zpravy" varianta="secondary">Napsat řemeslníkovi</ButtonLink>
+            <ButtonLink to={`/zpravy/${p.id}`} varianta="secondary">Napsat řemeslníkovi</ButtonLink>
           )}
         </div>
       </div>

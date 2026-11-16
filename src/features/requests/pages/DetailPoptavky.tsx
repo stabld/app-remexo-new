@@ -138,7 +138,7 @@ export function DetailPoptavky() {
             <h3 className="text-[15px] font-semibold">Co teď</h3>
             <p className="text-sm text-soft">{CO_TED[stav]}</p>
             {stav === 'ceka-na-potvrzeni' && <Button onClick={() => setHodnotit(true)} className="mt-2 self-start">Potvrdit a ohodnotit</Button>}
-            {(p.status === 'active') && <ButtonLink to="/zpravy" varianta="secondary" className="mt-2 self-start">Otevřít chat</ButtonLink>}
+            {(p.status === 'active') && <ButtonLink to={`/zpravy/${p.id}`} varianta="secondary" className="mt-2 self-start">Otevřít chat</ButtonLink>}
           </Card>
 
           <Card className="flex flex-col gap-3.5 p-5">

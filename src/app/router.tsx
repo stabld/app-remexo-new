@@ -1,12 +1,14 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { AppShell } from '@/layouts/AppShell'
+import { ChybaStranky } from '@/components/ChybaStranky'
 import { Stranka } from '@/layouts/Stranka'
 import { Pripravujeme } from '@/components/Pripravujeme'
 import { PrehledZakaznika } from '@/features/requests/pages/PrehledZakaznika'
 import { MojePoptavky } from '@/features/requests/pages/MojePoptavky'
 import { DetailPoptavky } from '@/features/requests/pages/DetailPoptavky'
 import { Nastaveni } from '@/features/profile/Nastaveni'
+import { Zpravy } from '@/features/chat/Zpravy'
 import { NovaPoptavka } from '@/features/requests/nova/NovaPoptavka'
 import type { Role } from '@/lib/types'
 
@@ -28,6 +30,7 @@ function Cast({ nazev }: { nazev: string }) {
 export const router = createBrowserRouter([
   {
     element: <AppShell />,
+    errorElement: <ChybaStranky />,
     children: [
       { path: '/', element: <Domu /> },
       // Zákazník
@@ -40,7 +43,8 @@ export const router = createBrowserRouter([
       { path: '/zakazky', element: <ProRoli role="craftsman"><Cast nazev="Moje zakázky" /></ProRoli> },
       { path: '/vydelky', element: <ProRoli role="craftsman"><Cast nazev="Výdělky" /></ProRoli> },
       // Obě role
-      { path: '/zpravy', element: <Cast nazev="Zprávy" /> },
+      { path: '/zpravy', element: <Zpravy /> },
+      { path: '/zpravy/:id', element: <Zpravy /> },
       { path: '/profil', element: <Cast nazev="Profil" /> },
       { path: '/nastaveni', element: <Nastaveni /> },
       { path: '*', element: <Navigate to="/" replace /> },

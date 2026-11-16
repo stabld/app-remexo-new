@@ -21,7 +21,7 @@ function Souhrn({ p }: { p: MojePoptavka }) {
       </>
     )
   }
-  const posledni = [...p.nabidky].sort((a, b) => b.created_at.localeCompare(a.created_at))[0]
+  const posledni = [...p.nabidky].sort((a, b) => (b.created_at ?? '').localeCompare(a.created_at ?? ''))[0]
   const pocet = p.status === 'waiting' ? p.cekajiciNabidky : p.nabidky.length
   return (
     <>

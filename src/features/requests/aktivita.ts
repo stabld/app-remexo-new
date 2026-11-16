@@ -20,5 +20,5 @@ export function posledniAktivita(poptavky: MojePoptavka[], limit = 5): Udalost[]
       udalosti.push({ kdy: p.dokonceni_navrzeno, text: `Hlásí hotovo: ${p.craftsman_name || 'řemeslník'}`, kde, nova: true, poptavkaId: p.id })
     }
   }
-  return udalosti.sort((a, b) => b.kdy.localeCompare(a.kdy)).slice(0, limit)
+  return udalosti.sort((a, b) => (b.kdy ?? '').localeCompare(a.kdy ?? '')).slice(0, limit)
 }

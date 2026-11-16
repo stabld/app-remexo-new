@@ -86,7 +86,7 @@ function KdoNaTomDela({ p }: { p: MojePoptavka }) {
         </p>
       </div>
       <div className="flex gap-2 max-sm:w-full [&>a]:max-sm:flex-1">
-        <ButtonLink to="/zpravy" varianta="secondary"><MessageCircle className="size-4" /> Napsat</ButtonLink>
+        <ButtonLink to={`/zpravy/${p.id}`} varianta="secondary"><MessageCircle className="size-4" /> Napsat</ButtonLink>
         {potvrdit && <ButtonLink to={`/poptavky/${p.id}`}>Potvrdit a ohodnotit</ButtonLink>}
       </div>
     </div>
