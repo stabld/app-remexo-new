@@ -6,7 +6,10 @@ import { ThemeProvider } from './app/providers/ThemeProvider'
 import { AuthProvider } from './features/auth/AuthProvider'
 import { ToastProvider } from './components/Toast'
 import { router } from './app/router'
+import { prevezmiPoptavkuZWebu } from './features/requests/nova/koncept'
 import './styles.css'
+
+prevezmiPoptavkuZWebu()
 
 const queryClient = new QueryClient({ defaultOptions: { queries: { refetchOnWindowFocus: true, staleTime: 30_000 } } })
 

@@ -7,6 +7,7 @@ import { PrehledZakaznika } from '@/features/requests/pages/PrehledZakaznika'
 import { MojePoptavky } from '@/features/requests/pages/MojePoptavky'
 import { DetailPoptavky } from '@/features/requests/pages/DetailPoptavky'
 import { Nastaveni } from '@/features/profile/Nastaveni'
+import { NovaPoptavka } from '@/features/requests/nova/NovaPoptavka'
 import type { Role } from '@/lib/types'
 
 /** Stránka jen pro jednu roli – druhou pošle na přehled. O přístupu k datům rozhoduje stejně databáze. */
@@ -32,7 +33,7 @@ export const router = createBrowserRouter([
       // Zákazník
       { path: '/poptavky', element: <ProRoli role="customer"><MojePoptavky /></ProRoli> },
       { path: '/poptavky/:id', element: <ProRoli role="customer"><DetailPoptavky /></ProRoli> },
-      { path: '/nova', element: <ProRoli role="customer"><Cast nazev="Nová poptávka" /></ProRoli> },
+      { path: '/nova', element: <ProRoli role="customer"><NovaPoptavka /></ProRoli> },
       // Řemeslník
       { path: '/trziste', element: <ProRoli role="craftsman"><Cast nazev="Tržiště" /></ProRoli> },
       { path: '/nabidky', element: <ProRoli role="craftsman"><Cast nazev="Moje nabídky" /></ProRoli> },
