@@ -6,9 +6,9 @@ import { AppShell } from '@/layouts/AppShell'
 import { MojeNabidky } from '@/features/jobs/MojeNabidky'
 import { MojeZakazky } from '@/features/jobs/MojeZakazky'
 import { DetailPrace } from '@/features/jobs/DetailPrace'
+import { PrehledRemeslnika } from '@/features/jobs/PrehledRemeslnika'
+import { Vydelky } from '@/features/jobs/Vydelky'
 import { ChybaStranky } from '@/components/ChybaStranky'
-import { Stranka } from '@/layouts/Stranka'
-import { Pripravujeme } from '@/components/Pripravujeme'
 import { PrehledZakaznika } from '@/features/requests/pages/PrehledZakaznika'
 import { MojePoptavky } from '@/features/requests/pages/MojePoptavky'
 import { DetailPoptavky } from '@/features/requests/pages/DetailPoptavky'
@@ -28,13 +28,9 @@ function ProRoli({ role, children }: { role: Role; children: React.ReactNode }) 
 
 function Domu() {
   const { role } = useAuth()
-  return role === 'customer' ? <PrehledZakaznika /> : <Cast nazev="Přehled" />
+  return role === 'customer' ? <PrehledZakaznika /> : <PrehledRemeslnika />
 }
 
-/** Část, která se teprve přepisuje. */
-function Cast({ nazev }: { nazev: string }) {
-  return <Stranka nadpis={nazev}><Pripravujeme nazev={nazev} /></Stranka>
-}
 
 export const router = createBrowserRouter([
   {
@@ -53,7 +49,7 @@ export const router = createBrowserRouter([
       { path: '/nabidky', element: <ProRoli role="craftsman"><MojeNabidky /></ProRoli> },
       { path: '/zakazky', element: <ProRoli role="craftsman"><MojeZakazky /></ProRoli> },
       { path: '/zakazky/:id', element: <ProRoli role="craftsman"><DetailPrace /></ProRoli> },
-      { path: '/vydelky', element: <ProRoli role="craftsman"><Cast nazev="Výdělky" /></ProRoli> },
+      { path: '/vydelky', element: <ProRoli role="craftsman"><Vydelky /></ProRoli> },
       // Obě role
       { path: '/zpravy', element: <Zpravy /> },
       { path: '/zpravy/:id', element: <Zpravy /> },
