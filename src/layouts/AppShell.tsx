@@ -4,6 +4,7 @@ import { useAuth } from '@/features/auth/AuthProvider'
 import { AuthPage } from '@/features/auth/AuthPage'
 import { NoveHesloModal } from '@/features/auth/NoveHesloModal'
 import { Sidebar } from './Sidebar'
+import { BorekPoradce } from '@/features/podpora/BorekPoradce'
 import { BottomNav } from './BottomNav'
 import { cekaPoptavkaZWebu } from '@/features/requests/nova/koncept'
 
@@ -42,6 +43,7 @@ export function AppShell() {
         <Outlet />
       </div>
       <BottomNav />
+      <BorekPoradce />
       <NoveHesloModal />
     </div>
   )

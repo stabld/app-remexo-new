@@ -5,6 +5,7 @@ import { Stranka } from '@/layouts/Stranka'
 import { Card } from '@/components/ui/Card'
 import { Button, ButtonLink } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
+import { Textarea } from '@/components/ui/Input'
 import { ProgressSteps } from '@/components/ui/ProgressSteps'
 import { Fotky } from '@/components/Fotky'
 import { NacitaniStranky } from '@/components/NacitaniStranky'
@@ -12,7 +13,7 @@ import { useToast } from '@/components/Toast'
 import { rozlozPopis } from '@/lib/popis'
 import { formatDatumCas, relativniCas } from '@/lib/cas'
 import {
-  useDetailPoptavky, useOdmitnoutNabidku, usePotvrditDokonceni, usePrijmoutNabidku, useSmazatPoptavku, type NabidkaVDetailu,
+  useDetailPoptavky, useOdmitnoutNabidku, usePotvrditDokonceni, usePrijmoutNabidku, useSmazatPoptavku, useZrusitZakazku, type NabidkaVDetailu,
 } from '../api'
 import { krokPrubehu, lokalita, sklonujNabidky, type ZobrazenyStav } from '../model'
 import { StavBadge } from '../components/StavBadge'
@@ -23,7 +24,7 @@ import { HodnoceniModal } from '../components/HodnoceniModal'
 const CO_TED: Record<ZobrazenyStav, string> = {
   'ceka-na-nabidky': 'Poptávka je na tržišti. Jakmile řemeslník pošle nabídku, dáme ti vědět e-mailem. Pomůže doplnit fotku nebo termín.',
   'nove-nabidky': 'Vyber jednu nabídku. Po přijetí uvidíte navzájem telefon a adresu a otevře se chat. Ostatní nabídky se uzavřou.',
-  realizace: 'Řemeslník na zakázce pracuje. Domluvte se v chatu. Až nahlásí dokončení, potvrdíš ho a ohodnotíš.',
+  realizace: 'Řemeslník na zakázce pracuje. Domluvte se v chatu. Až nahlásí dokončení, potvrdíš ho a ohodnotíš. Když je hotovo dřív, můžeš to označit sám.',
   'ceka-na-potvrzeni': 'Řemeslník hlásí, že je hotovo. Zkontroluj práci, potvrď dokončení a ohodnoť ho.',
   hotovo: 'Zakázka je dokončená. Díky za hodnocení, pomáhá dalším zákazníkům.',
   zruseno: 'Poptávka je zrušená a řemeslníci ji už nevidí.',
@@ -38,6 +39,9 @@ export function DetailPoptavky() {
   const odmitnout = useOdmitnoutNabidku()
   const potvrdit = usePotvrditDokonceni()
   const smazat = useSmazatPoptavku()
+  const zrusit = useZrusitZakazku()
+  const [rusit, setRusit] = useState(false)
+  const [duvodZruseni, setDuvodZruseni] = useState('')
 
   const [keOdmitnuti, setKeOdmitnuti] = useState<NabidkaVDetailu | null>(null)
   const [hodnotit, setHodnotit] = useState(false)
@@ -138,6 +142,7 @@ export function DetailPoptavky() {
             <h3 className="text-[15px] font-semibold">Co teď</h3>
             <p className="text-sm text-soft">{CO_TED[stav]}</p>
             {stav === 'ceka-na-potvrzeni' && <Button onClick={() => setHodnotit(true)} className="mt-2 self-start">Potvrdit a ohodnotit</Button>}
+            {stav === 'realizace' && <Button varianta="secondary" onClick={() => setHodnotit(true)} className="mt-2 self-start">Označit hotovo a ohodnotit</Button>}
             {(p.status === 'active') && <ButtonLink to={`/zpravy/${p.id}`} varianta="secondary" className="mt-2 self-start">Otevřít chat</ButtonLink>}
           </Card>
 
@@ -152,6 +157,12 @@ export function DetailPoptavky() {
               ))}
             </ol>
           </Card>
+
+          {p.status === 'active' && (
+            <Card className="flex flex-col p-2">
+              <button onClick={() => setRusit(true)} className="rounded-lg px-3 py-2.5 text-left text-sm font-medium text-danger-text hover:bg-surface-2">Zrušit zakázku</button>
+            </Card>
+          )}
 
           {p.status === 'waiting' && (
             <Card className="flex flex-col p-2">
@@ -193,6 +204,25 @@ export function DetailPoptavky() {
           )
         }
       />
+
+      <Modal otevreno={rusit} zavrit={() => setRusit(false)} nadpis="Zrušit zakázku?">
+        <p className="mb-4 text-sm text-muted">{p.craftsman_name || 'Řemeslník'} se o zrušení dozví. Zakázka se uzavře a už na ni nepůjde reagovat.</p>
+        <Textarea label="Důvod pro řemeslníka" rows={3} value={duvodZruseni} onChange={(e) => setDuvodZruseni(e.target.value)} napoveda="Nepovinné." />
+        <div className="mt-6 flex gap-2">
+          <Button varianta="secondary" onClick={() => setRusit(false)} className="flex-1">Nerušit</Button>
+          <Button
+            varianta="danger"
+            className="flex-1"
+            loading={zrusit.isPending}
+            onClick={() => zrusit.mutate({ requestId: p.id, duvod: duvodZruseni }, {
+              onSuccess: () => { setRusit(false); toast('Zakázka zrušena', 'Řemeslník to uvidí u zakázky i s důvodem.', 'info') },
+              onError: (e) => toast('Nepodařilo se zrušit', e.message, 'error'),
+            })}
+          >
+            Zrušit zakázku
+          </Button>
+        </div>
+      </Modal>
 
       <Modal otevreno={mazat} zavrit={() => setMazat(false)} nadpis="Smazat poptávku?">
         <p className="text-sm text-muted">„{nazev}“ zmizí z tržiště i s fotkami a nabídkami. Tohle nejde vrátit.</p>

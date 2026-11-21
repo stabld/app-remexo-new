@@ -33,3 +33,19 @@ export async function zeptejSeBorka(text: string, fotky: NovaFotka[]): Promise<B
     return { status: 'done', nazev: ocisti(d.nazev), kategorie: ocisti(d.kategorie), popis: ocisti(d.popis), nalehavost: ocisti(d.nalehavost), odhad_ceny: ocisti(d.odhad_ceny), rada: ocisti(d.rada) }
   return { status: 'question', message: ocisti(d.message) }
 }
+
+/** Bořek jako poradce: krátká odpověď na otázku, jak Remexo funguje / koho zavolat. Vrací čistý text. */
+export async function poradSeSBorkem(otazka: string): Promise<string> {
+  const { data } = await supabase.auth.getSession()
+  const token = data.session?.access_token
+  const res = await fetch('/api/borek-ai', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
+    body: JSON.stringify({ parts: [{ text: otazka }], rezim: 'poradce', useJson: false }),
+  })
+  const body = await res.json().catch(() => ({}))
+  if (!res.ok) throw new BorekChyba(body.error || 'Bořek teď neodpovídá.', !!body.pretizeno)
+  const text = String(body.text ?? '').trim()
+  if (!text) throw new BorekChyba('Bořek neodpověděl.')
+  return text
+}

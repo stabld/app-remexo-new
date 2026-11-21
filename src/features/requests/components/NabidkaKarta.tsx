@@ -1,18 +1,21 @@
+import { useState } from 'react'
 import { ShieldCheck, Star } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 import { Avatar } from '@/components/ui/Avatar'
 import { Button } from '@/components/ui/Button'
 import { kratkeDatum } from '@/lib/cas'
 import type { NabidkaVDetailu } from '../api'
+import { VerejnyProfil } from './VerejnyProfil'
 
 /** Jedna nabídka; karty stojí vedle sebe, aby se daly porovnat. */
 export function NabidkaKarta({
   nabidka: n, lzeRozhodnout, onPrijmout, onOdmitnout, pracuji,
 }: { nabidka: NabidkaVDetailu; lzeRozhodnout: boolean; onPrijmout: () => void; onOdmitnout: () => void; pracuji: boolean }) {
   const jmeno = n.craftsman_name || 'Řemeslník'
+  const [profil, setProfil] = useState(false)
   return (
     <Card className="flex flex-col gap-4 p-5">
-      <div className="flex items-center gap-3">
+      <button type="button" onClick={() => setProfil(true)} className="-m-1.5 flex items-center gap-3 rounded-[12px] p-1.5 text-left transition-colors hover:bg-surface-2" title="Zobrazit profil">
         <Avatar jmeno={jmeno} url={n.avatarUrl} velikost={44} />
         <div className="flex min-w-0 flex-col leading-snug">
           <span className="flex items-center gap-1.5 font-semibold">
@@ -28,8 +31,10 @@ export function NabidkaKarta({
           ) : (
             <span className="text-[13px] text-muted">Nový na Remexu</span>
           )}
+          <span className="text-xs font-medium text-accent-text">Zobrazit profil</span>
         </div>
-      </div>
+      </button>
+      <VerejnyProfil id={profil ? n.craftsman_id : null} jmeno={jmeno} zavrit={() => setProfil(false)} />
 
       <dl className="grid grid-cols-2 gap-3 rounded-[10px] bg-bg px-3.5 py-3">
         <div>

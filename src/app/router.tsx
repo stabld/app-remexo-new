@@ -19,6 +19,7 @@ import { NovaPoptavka } from '@/features/requests/nova/NovaPoptavka'
 import type { Role } from '@/lib/types'
 
 const Trziste = lazy(() => import('@/features/market/Trziste').then((m) => ({ default: m.Trziste })))
+const Sprava = lazy(() => import('@/features/admin/Sprava').then((m) => ({ default: m.Sprava })))
 const DetailZakazky = lazy(() => import('@/features/market/DetailZakazky').then((m) => ({ default: m.DetailZakazky })))
 
 /** Stránka jen pro jednu roli – druhou pošle na přehled. O přístupu k datům rozhoduje stejně databáze. */
@@ -54,6 +55,7 @@ export const router = createBrowserRouter([
       { path: '/zpravy', element: <Zpravy /> },
       { path: '/zpravy/:id', element: <Zpravy /> },
       { path: '/profil', element: <Profil /> },
+      { path: '/sprava', element: <Suspense fallback={<NacitaniStranky />}><Sprava /></Suspense> },
       { path: '/nastaveni', element: <Nastaveni /> },
       { path: '*', element: <Navigate to="/" replace /> },
     ],

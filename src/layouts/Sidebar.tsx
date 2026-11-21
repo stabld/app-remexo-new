@@ -1,11 +1,13 @@
 import { Link, NavLink } from 'react-router-dom'
-import { LogOut, Plus, Settings } from 'lucide-react'
+import { Bug, LogOut, Plus, Settings, Shield } from 'lucide-react'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { ROLE_LABEL } from '@/lib/types'
 import { Avatar } from '@/components/ui/Avatar'
 import { tridyTlacitka } from '@/components/ui/Button'
 import { NAVIGACE } from '@/app/navigace'
 import { useBubliny } from './useBubliny'
+import { useJeAdmin } from '@/features/admin/api'
+import { NahlasitProblem } from '@/features/podpora/NahlasitProblem'
 
 const POLOZKA = 'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors'
 const AKTIVNI = 'bg-accent-soft font-semibold text-ink [&>svg]:text-accent-text'
@@ -14,6 +16,7 @@ const NEAKTIVNI = 'font-medium text-soft hover:bg-surface-2 hover:text-ink'
 export function Sidebar() {
   const { role, jmeno, user, odhlasit } = useAuth()
   const bubliny = useBubliny()
+  const admin = useJeAdmin()
 
   return (
     <aside className="sticky top-0 hidden h-dvh w-[248px] shrink-0 flex-col gap-6 border-r border-line bg-surface px-3.5 py-5 lg:flex">
@@ -45,6 +48,18 @@ export function Sidebar() {
       </nav>
 
       <div className="mt-auto flex flex-col gap-0.5 border-t border-line pt-3.5">
+        {admin.data && (
+          <NavLink to="/sprava" className={({ isActive }) => `${POLOZKA} ${isActive ? AKTIVNI : NEAKTIVNI}`}>
+            <Shield className="size-[18px]" /> Správa
+          </NavLink>
+        )}
+        <NahlasitProblem>
+          {(otevrit) => (
+            <button type="button" onClick={otevrit} className={`${POLOZKA} ${NEAKTIVNI}`}>
+              <Bug className="size-[18px]" /> Nahlásit problém
+            </button>
+          )}
+        </NahlasitProblem>
         <NavLink to="/nastaveni" className={({ isActive }) => `${POLOZKA} ${isActive ? AKTIVNI : NEAKTIVNI}`}>
           <Settings className="size-[18px]" /> Nastavení
         </NavLink>

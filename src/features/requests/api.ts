@@ -193,6 +193,21 @@ export function usePotvrditDokonceni() {
   })
 }
 
+/** Zákazník ruší přidělenou (běžící) zakázku. Stejný zápis jako pilot; řemeslník uvidí důvod. */
+export function useZrusitZakazku() {
+  const obnov = useObnovPoptavky()
+  return useMutation({
+    mutationFn: async ({ requestId, duvod }: { requestId: number; duvod: string }) => {
+      const { error } = await supabase
+        .from('requests')
+        .update({ status: 'cancelled', zruseno_kym: 'zakaznik', zruseno_kdy: new Date().toISOString(), zruseno_duvod: duvod.trim() || null })
+        .eq('id', requestId)
+      if (error) throw error
+    },
+    onSettled: (_d, _e, v) => obnov(v.requestId),
+  })
+}
+
 /** Smaže fotky ve složce poptávky + cesty z popisu (jen z vlastní složky, nikdy cizí). */
 async function smazFotky(poptavka: Poptavka) {
   const id = String(poptavka.id)

@@ -1,6 +1,6 @@
 import { useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { Camera, ChevronRight, LogOut, Palette, Repeat2, ShieldCheck } from 'lucide-react'
+import { Bug, Camera, ChevronRight, LogOut, Palette, Repeat2, Shield, ShieldCheck } from 'lucide-react'
 import { Stranka } from '@/layouts/Stranka'
 import { Card } from '@/components/ui/Card'
 import { Avatar } from '@/components/ui/Avatar'
@@ -11,6 +11,8 @@ import { useToast } from '@/components/Toast'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { zkontrolujHeslo } from '@/features/auth/heslo'
 import { ROLE_LABEL } from '@/lib/types'
+import { useJeAdmin } from '@/features/admin/api'
+import { NahlasitProblem } from '@/features/podpora/NahlasitProblem'
 import {
   chybiVProfilu, cisteIco, cistyTelefon, stavOvereni, TELEFON,
   useNahratFotku, useSoukromyProfil, useUlozitProfil, useZmenitHeslo,
@@ -325,6 +327,7 @@ function Radek({ ikona: Ikona, nadpis, popis, akce, onClick, to, nebezpecne }: {
 
 function Ucet() {
   const { role, prepniRoli, odhlasit } = useAuth()
+  const admin = useJeAdmin()
   const toast = useToast()
   const [prepinam, setPrepinam] = useState(false)
   const druha = role === 'customer' ? 'craftsman' : 'customer'
@@ -352,6 +355,8 @@ function Ucet() {
           akce={<Button varianta="secondary" velikost="sm" loading={prepinam} tabIndex={-1} className="pointer-events-none">Přepnout</Button>}
         />
         <Radek ikona={Palette} nadpis="Vzhled" popis="Světlý, tmavý nebo podle zařízení" to="/nastaveni" />
+        <NahlasitProblem>{(otevrit) => <Radek ikona={Bug} nadpis="Nahlásit problém" popis="Něco nefunguje? Dej nám vědět." onClick={otevrit} />}</NahlasitProblem>
+        {admin.data && <Radek ikona={Shield} nadpis="Správa" popis="Ověřování řemeslníků, hlášení, čísla" to="/sprava" />}
         <Radek ikona={LogOut} nadpis="Odhlásit se" onClick={odhlasit} akce={<span />} nebezpecne />
       </div>
     </Card>
