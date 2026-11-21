@@ -114,7 +114,7 @@ export function useUlozitProfil() {
           else {
             const bod = await geokoduj(adresa)
             if (bod) Object.assign(zmeny, { adresa, ...bod })
-            else varovani.push('Místo, odkud vyjíždíte, se nepodařilo najít. Zkuste ulici a město.')
+            else varovani.push('Místo, odkud vyjíždíš, se nepodařilo najít. Zkus ulici a město.')
           }
         }
       }
@@ -127,7 +127,7 @@ export function useUlozitProfil() {
       try {
         await ulozVerejnyProfil(user, role)
       } catch {
-        varovani.push('Veřejný profil se nepodařilo aktualizovat, ostatní mohou chvíli vidět staré údaje.')
+        varovani.push('Veřejný profil se nepodařilo aktualizovat, ostatní můžou chvíli vidět staré údaje.')
       }
       return { varovani }
     },

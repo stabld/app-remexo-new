@@ -31,9 +31,9 @@ function Sekce({ nadpis, popis, children }: { nadpis: string; popis?: ReactNode;
 }
 
 const OVERENI: Record<StavOvereni, { text: string; ton: Ton; popis: string }> = {
-  overeno: { text: 'Ověřeno', ton: 'success', popis: 'Živnostenské oprávnění jsme zkontrolovali. Zákazníci u vás vidí odznak.' },
+  overeno: { text: 'Ověřeno', ton: 'success', popis: 'Živnostenské oprávnění jsme zkontrolovali. Zákazníci u tebe vidí odznak.' },
   ceka: { text: 'Čeká na kontrolu', ton: 'accent', popis: 'IČO máme. Živnostenské oprávnění teď zkontrolujeme v rejstříku.' },
-  neovereno: { text: 'Neověřeno', ton: 'muted', popis: 'Vyplňte IČO a my ověříme živnostenské oprávnění.' },
+  neovereno: { text: 'Neověřeno', ton: 'muted', popis: 'Vyplň IČO a my ověříme živnostenské oprávnění.' },
 }
 
 function Prepinac({ zapnuto, onZmena, disabled, popisek, napoveda }: {
@@ -144,7 +144,7 @@ function FormularUdaju({ soukromy, soukromyNacten }: { soukromy?: SoukromyProfil
   const odeslat = (e: FormEvent) => {
     e.preventDefault()
     const nove: Record<string, string> = {}
-    if (!udaje.full_name.trim()) nove.full_name = 'Vyplňte jméno a příjmení.'
+    if (!udaje.full_name.trim()) nove.full_name = 'Vyplň jméno a příjmení.'
     const tel = cistyTelefon(udaje.phone)
     if (tel && !TELEFON.test(tel)) nove.phone = 'Telefonní číslo musí mít 9 číslic.'
     const cisteIc = cisteIco(icoHodnota)
@@ -177,7 +177,7 @@ function FormularUdaju({ soukromy, soukromyNacten }: { soukromy?: SoukromyProfil
   return (
     <form onSubmit={odeslat} noValidate>
       <Card>
-        <Sekce nadpis="Osobní údaje" popis={remeslnik ? 'Jméno, fotku a město uvidí zákazníci u vašich nabídek.' : 'Telefon dostane jen řemeslník, kterého si vyberete.'}>
+        <Sekce nadpis="Osobní údaje" popis={remeslnik ? 'Jméno, fotku a město uvidí zákazníci u tvých nabídek.' : 'Telefon dostane jen řemeslník, kterého si vybereš.'}>
           <Fotka />
           <div className="grid gap-4 sm:grid-cols-2">
             <Input label="Jméno a příjmení" autoComplete="name" value={udaje.full_name} onChange={nastav('full_name')} chyba={chyby.full_name} />
@@ -189,13 +189,13 @@ function FormularUdaju({ soukromy, soukromyNacten }: { soukromy?: SoukromyProfil
               placeholder={remeslnik ? 'Olomouc a okolí' : 'Olomouc'}
               value={udaje.city}
               onChange={nastav('city')}
-              napoveda={remeslnik ? 'Uvidí zákazníci ve vašem profilu.' : undefined}
+              napoveda={remeslnik ? 'Uvidí zákazníci v tvém profilu.' : undefined}
             />
           </div>
         </Sekce>
 
         {remeslnik && (
-          <Sekce nadpis="O vás" popis="Krátce, co děláte a jak dlouho. Zákazníci to čtou, než přijmou nabídku.">
+          <Sekce nadpis="O tobě" popis="Krátce, co děláš a jak dlouho. Zákazníci to čtou, než přijmou nabídku.">
             <Textarea
               label="O mně / popis služeb"
               rows={5}
@@ -206,7 +206,7 @@ function FormularUdaju({ soukromy, soukromyNacten }: { soukromy?: SoukromyProfil
               napoveda={`${udaje.bio.length} / 1000`}
             />
             <Input
-              label="Odkud vyjíždíte"
+              label="Odkud vyjíždíš"
               autoComplete="street-address"
               placeholder="Ulice a město"
               value={adresaHodnota}
@@ -234,15 +234,15 @@ function FormularUdaju({ soukromy, soukromyNacten }: { soukromy?: SoukromyProfil
               disabled={!soukromyNacten}
               chyba={chyby.ico}
               napoveda={
-                <>Osm číslic. Najdete ho na <a href="https://rzp.gov.cz" target="_blank" rel="noreferrer" className="font-medium text-accent-text underline-offset-2 hover:underline">rzp.gov.cz</a>.</>
+                <>Osm číslic. Najdeš ho na <a href="https://rzp.gov.cz" target="_blank" rel="noreferrer" className="font-medium text-accent-text underline-offset-2 hover:underline">rzp.gov.cz</a>.</>
               }
             />
           </Sekce>
         )}
 
         {!remeslnik && (
-          <Sekce nadpis="O vás" popis="Nepovinné. Řemeslníci to uvidí ve vašem profilu.">
-            <Textarea label="Pár slov o vás" rows={3} maxLength={500} value={udaje.bio} onChange={nastav('bio')} />
+          <Sekce nadpis="O tobě" popis="Nepovinné. Řemeslníci to uvidí v tvém profilu.">
+            <Textarea label="Pár slov o tobě" rows={3} maxLength={500} value={udaje.bio} onChange={nastav('bio')} />
           </Sekce>
         )}
 
@@ -252,12 +252,12 @@ function FormularUdaju({ soukromy, soukromyNacten }: { soukromy?: SoukromyProfil
             onZmena={setEmaily}
             disabled={!soukromyNacten}
             popisek="Posílat upozornění e-mailem"
-            napoveda={remeslnik ? 'Nové poptávky ve vašem okolí, nepřečtené zprávy a potvrzené zakázky.' : 'Nové nabídky, nepřečtené zprávy a hotové zakázky.'}
+            napoveda={remeslnik ? 'Nové poptávky v tvém okolí, nepřečtené zprávy a potvrzené zakázky.' : 'Nové nabídky, nepřečtené zprávy a hotové zakázky.'}
           />
         </Sekce>
 
         <div className="flex items-center justify-end gap-3 rounded-b-[14px] border-t border-line bg-surface-2/50 px-5 py-3.5 md:px-6">
-          {zmeneno && <span className="mr-auto text-[13px] text-muted">Máte neuložené změny</span>}
+          {zmeneno && <span className="mr-auto text-[13px] text-muted">Máš neuložené změny</span>}
           <Button type="submit" loading={ulozit.isPending} disabled={!zmeneno}>Uložit změny</Button>
         </div>
       </Card>
@@ -280,7 +280,7 @@ function Heslo() {
     zmenit.mutate(heslo, {
       onSuccess: () => {
         setHeslo(''); setZnovu(''); setChyba({})
-        toast('Heslo změněno', 'Příště se přihlásíte novým heslem.', 'success')
+        toast('Heslo změněno', 'Příště se přihlásíš novým heslem.', 'success')
       },
       onError: (e) => toast('Heslo se nepodařilo změnit', e.message, 'error'),
     })
@@ -289,7 +289,7 @@ function Heslo() {
   return (
     <form onSubmit={odeslat} noValidate>
       <Card>
-        <Sekce nadpis="Heslo" popis="Aspoň 8 znaků, jedno velké písmeno a číslice. Když se přihlašujete přes Google, heslo nepotřebujete.">
+        <Sekce nadpis="Heslo" popis="Aspoň 8 znaků, jedno velké písmeno a číslice. Když se přihlašuješ přes Google, heslo nepotřebuješ.">
           <div className="grid gap-4 sm:grid-cols-2">
             <Input label="Nové heslo" type="password" autoComplete="new-password" value={heslo} onChange={(e) => { setHeslo(e.target.value); setChyba({}) }} chyba={chyba.heslo} />
             <Input label="Heslo znovu" type="password" autoComplete="new-password" value={znovu} onChange={(e) => { setZnovu(e.target.value); setChyba({}) }} chyba={chyba.znovu} />
@@ -333,7 +333,7 @@ function Ucet() {
     setPrepinam(true)
     try {
       await prepniRoli(druha)
-      toast(`Teď jste ${ROLE_LABEL[druha].toLowerCase()}`, 'Vaše poptávky, nabídky i zprávy zůstávají, jen se přepne prostředí.', 'success')
+      toast(`Teď jsi ${ROLE_LABEL[druha].toLowerCase()}`, 'Tvoje poptávky, nabídky i zprávy zůstávají, jen se přepne prostředí.', 'success')
     } catch (e) {
       toast('Roli se nepodařilo přepnout', e instanceof Error ? e.message : undefined, 'error')
     } finally {
@@ -347,7 +347,7 @@ function Ucet() {
         <Radek
           ikona={Repeat2}
           nadpis={druha === 'craftsman' ? 'Nabízet práci jako řemeslník' : 'Zadávat poptávky jako zákazník'}
-          popis={`Teď používáte Remexo jako ${ROLE_LABEL[role].toLowerCase()}. Jeden účet zvládne obojí.`}
+          popis={`Teď používáš Remexo jako ${ROLE_LABEL[role].toLowerCase()}. Jeden účet zvládne obojí.`}
           onClick={prepnout}
           akce={<Button varianta="secondary" velikost="sm" loading={prepinam} tabIndex={-1} className="pointer-events-none">Přepnout</Button>}
         />
@@ -368,8 +368,8 @@ export function Profil() {
       <div className="flex max-w-[880px] flex-col gap-5">
         {chybi.length > 0 && (
           <div className="rounded-[12px] border border-accent/30 bg-accent-soft px-4 py-3 text-sm text-accent-soft-text">
-            <span className="font-semibold">Doplňte {chybi.join(', ')}.</span>{' '}
-            {role === 'customer' ? 'Bez toho nepůjde poslat poptávku.' : 'Zákazníci vás podle toho poznají a snáz se domluví.'}
+            <span className="font-semibold">Doplň {chybi.join(', ')}.</span>{' '}
+            {role === 'customer' ? 'Bez toho nepůjde poslat poptávku.' : 'Zákazníci tě podle toho poznají a snáz se domluví.'}
           </div>
         )}
         {/* key: formulář se po načtení uživatele postaví znovu s čerstvými hodnotami */}

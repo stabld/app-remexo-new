@@ -1,3 +1,5 @@
+import { NacitaniStranky } from '@/components/NacitaniStranky'
+import { lazy, Suspense } from 'react'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { AppShell } from '@/layouts/AppShell'
@@ -12,6 +14,9 @@ import { Profil } from '@/features/profile/Profil'
 import { Zpravy } from '@/features/chat/Zpravy'
 import { NovaPoptavka } from '@/features/requests/nova/NovaPoptavka'
 import type { Role } from '@/lib/types'
+
+const Trziste = lazy(() => import('@/features/market/Trziste').then((m) => ({ default: m.Trziste })))
+const DetailZakazky = lazy(() => import('@/features/market/DetailZakazky').then((m) => ({ default: m.DetailZakazky })))
 
 /** Stránka jen pro jednu roli – druhou pošle na přehled. O přístupu k datům rozhoduje stejně databáze. */
 function ProRoli({ role, children }: { role: Role; children: React.ReactNode }) {
@@ -39,7 +44,9 @@ export const router = createBrowserRouter([
       { path: '/poptavky/:id', element: <ProRoli role="customer"><DetailPoptavky /></ProRoli> },
       { path: '/nova', element: <ProRoli role="customer"><NovaPoptavka /></ProRoli> },
       // Řemeslník
-      { path: '/trziste', element: <ProRoli role="craftsman"><Cast nazev="Tržiště" /></ProRoli> },
+      // Tržiště tahá knihovnu map, načte se až ve chvíli, kdy ho řemeslník otevře.
+      { path: '/trziste', element: <ProRoli role="craftsman"><Suspense fallback={<NacitaniStranky />}><Trziste /></Suspense></ProRoli> },
+      { path: '/trziste/:id', element: <ProRoli role="craftsman"><Suspense fallback={<NacitaniStranky />}><DetailZakazky /></Suspense></ProRoli> },
       { path: '/nabidky', element: <ProRoli role="craftsman"><Cast nazev="Moje nabídky" /></ProRoli> },
       { path: '/zakazky', element: <ProRoli role="craftsman"><Cast nazev="Moje zakázky" /></ProRoli> },
       { path: '/vydelky', element: <ProRoli role="craftsman"><Cast nazev="Výdělky" /></ProRoli> },

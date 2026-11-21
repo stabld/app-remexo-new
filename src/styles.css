@@ -107,3 +107,21 @@ body {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
+
+/* Mapa zakázek (Leaflet) */
+.mapa-zakazek { background: var(--placeholder); font-family: inherit; }
+.mapa-pin {
+  display: grid; place-items: center; width: 100%; height: 100%; box-sizing: border-box;
+  border-radius: 999px; background: var(--surface); border: 3px solid var(--accent);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25); transition: transform 0.15s;
+}
+.mapa-pin:hover { transform: scale(1.12); }
+.mapa-pin--vybrany { background: var(--accent); border-color: #fff; color: #171B24; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3); }
+.mapa-domu {
+  display: block; width: 100%; height: 100%; box-sizing: border-box; border-radius: 999px;
+  background: #171B24; border: 3px solid #fff; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+.mapa-zakazek .leaflet-tooltip { font: inherit; font-size: 13px; line-height: 1.4; border-radius: 8px; border: 0; padding: 6px 10px; box-shadow: var(--shadow-raised); }
+.dark .mapa-zakazek .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9); }
+.dark .mapa-zakazek .leaflet-control-zoom a,
+.dark .mapa-zakazek .leaflet-control-attribution { background: var(--surface); color: var(--text-muted); border-color: var(--border); }
