@@ -3,6 +3,9 @@ import { lazy, Suspense } from 'react'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { AppShell } from '@/layouts/AppShell'
+import { MojeNabidky } from '@/features/jobs/MojeNabidky'
+import { MojeZakazky } from '@/features/jobs/MojeZakazky'
+import { DetailPrace } from '@/features/jobs/DetailPrace'
 import { ChybaStranky } from '@/components/ChybaStranky'
 import { Stranka } from '@/layouts/Stranka'
 import { Pripravujeme } from '@/components/Pripravujeme'
@@ -47,8 +50,9 @@ export const router = createBrowserRouter([
       // Tržiště tahá knihovnu map, načte se až ve chvíli, kdy ho řemeslník otevře.
       { path: '/trziste', element: <ProRoli role="craftsman"><Suspense fallback={<NacitaniStranky />}><Trziste /></Suspense></ProRoli> },
       { path: '/trziste/:id', element: <ProRoli role="craftsman"><Suspense fallback={<NacitaniStranky />}><DetailZakazky /></Suspense></ProRoli> },
-      { path: '/nabidky', element: <ProRoli role="craftsman"><Cast nazev="Moje nabídky" /></ProRoli> },
-      { path: '/zakazky', element: <ProRoli role="craftsman"><Cast nazev="Moje zakázky" /></ProRoli> },
+      { path: '/nabidky', element: <ProRoli role="craftsman"><MojeNabidky /></ProRoli> },
+      { path: '/zakazky', element: <ProRoli role="craftsman"><MojeZakazky /></ProRoli> },
+      { path: '/zakazky/:id', element: <ProRoli role="craftsman"><DetailPrace /></ProRoli> },
       { path: '/vydelky', element: <ProRoli role="craftsman"><Cast nazev="Výdělky" /></ProRoli> },
       // Obě role
       { path: '/zpravy', element: <Zpravy /> },

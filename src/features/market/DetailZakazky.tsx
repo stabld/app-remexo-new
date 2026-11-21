@@ -116,7 +116,7 @@ function FormularNabidky({ z, moje }: { z: Poptavka; moje?: MojeNabidkaKPoptavce
   )
 }
 
-function StavNabidky({ moje }: { moje: MojeNabidkaKPoptavce }) {
+function StavNabidky({ moje, id }: { moje: MojeNabidkaKPoptavce; id: number }) {
   const ceka = moje.stav === 'pending'
   return (
     <Card className="flex flex-col gap-3 p-5">
@@ -128,8 +128,8 @@ function StavNabidky({ moje }: { moje: MojeNabidkaKPoptavce }) {
             ? 'Zákazník tvoji nabídku přijal. Domluvte se v chatu.'
             : `Zákazník nabídku odmítl${moje.duvod && DUVOD_PRO_REMESLNIKA[moje.duvod] ? `, protože ${DUVOD_PRO_REMESLNIKA[moje.duvod]}` : ''}. Další už u téhle zakázky poslat nejde.`}
       </p>
-      <ButtonLink to={moje.stav === 'accepted' ? '/zakazky' : '/nabidky'} varianta="secondary">
-        {moje.stav === 'accepted' ? 'Moje zakázky' : 'Moje nabídky'}
+      <ButtonLink to={moje.stav === 'accepted' ? `/zakazky/${id}` : '/nabidky'} varianta="secondary">
+        {moje.stav === 'accepted' ? 'Otevřít zakázku' : 'Moje nabídky'}
       </ButtonLink>
     </Card>
   )
@@ -215,7 +215,7 @@ export function DetailZakazky() {
               <p className="mt-1 text-sm text-muted">Nabídku jí může poslat jen jiný řemeslník.</p>
             </Card>
           ) : mojeNabidka && !muzeNabidnout(mojeNabidka) ? (
-            <StavNabidky moje={mojeNabidka} />
+            <StavNabidky moje={mojeNabidka} id={z.id} />
           ) : (
             <FormularNabidky z={z} moje={mojeNabidka} />
           )}
