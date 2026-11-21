@@ -1,4 +1,4 @@
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { Plus } from 'lucide-react'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { MOBILNI } from '@/app/navigace'
@@ -7,6 +7,9 @@ import { useBubliny } from './useBubliny'
 export function BottomNav() {
   const { role } = useAuth()
   const bubliny = useBubliny()
+  const { pathname } = useLocation()
+  // Zakázky, Nabídky a Výdělky sdílejí na mobilu jednu položku
+  const prace = /^\/(zakazky|nabidky|vydelky)/.test(pathname)
 
   return (
     <nav aria-label="Hlavní navigace" className="fixed inset-x-0 bottom-0 z-30 flex items-center border-t border-line bg-surface px-1 pb-[max(env(safe-area-inset-bottom),8px)] pt-1.5 lg:hidden">
@@ -23,7 +26,7 @@ export function BottomNav() {
             to={p.cesta}
             end={p.cesta === '/'}
             className={({ isActive }) =>
-              `relative flex min-h-11 flex-1 flex-col items-center justify-center gap-0.5 py-1.5 text-[11px] ${isActive ? 'font-semibold text-ink [&>svg]:text-accent-text' : 'font-medium text-muted'}`
+              `relative flex min-h-11 flex-1 flex-col items-center justify-center gap-0.5 py-1.5 text-[11px] ${isActive || (p.cesta === '/zakazky' && prace) ? 'font-semibold text-ink [&>svg]:text-accent-text' : 'font-medium text-muted'}`
             }
           >
             <p.ikona className="size-[22px]" />

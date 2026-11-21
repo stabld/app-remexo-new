@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Info, Wallet } from 'lucide-react'
 import { Stranka } from '@/layouts/Stranka'
+import { PrepinacPrace } from './PrepinacPrace'
 import { Card } from '@/components/ui/Card'
 import { ButtonLink } from '@/components/ui/Button'
 import { NacitaniStranky } from '@/components/NacitaniStranky'
@@ -47,6 +48,7 @@ export function Vydelky() {
 
   return (
     <Stranka nadpis="Výdělky" sirka="siroka">
+      <PrepinacPrace />
       <div className="flex flex-col gap-6">
         <section className="flex max-w-[820px] items-start gap-3.5 rounded-[14px] border border-line bg-surface px-5 py-4">
           <Wallet className="mt-0.5 size-5 shrink-0 text-muted" aria-hidden />

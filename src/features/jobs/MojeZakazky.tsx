@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Briefcase, Wallet } from 'lucide-react'
 import { Stranka } from '@/layouts/Stranka'
+import { PrepinacPrace } from './PrepinacPrace'
 import { Card } from '@/components/ui/Card'
 import { ButtonLink } from '@/components/ui/Button'
 import { NacitaniStranky } from '@/components/NacitaniStranky'
@@ -43,6 +44,7 @@ export function MojeZakazky() {
 
   return (
     <Stranka nadpis="Moje zakázky" sirka="siroka">
+      <PrepinacPrace />
       <div className="flex flex-col gap-5">
         <div role="tablist" aria-label="Stav zakázek" className="-mx-4 flex gap-1 overflow-x-auto border-b border-line px-4 sm:mx-0 sm:px-0">
           {ZALOZKY.map((z) => {

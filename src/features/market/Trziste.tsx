@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Inbox, List, Map as MapIkona, MapPin, Search } from 'lucide-react'
 import { Stranka } from '@/layouts/Stranka'
@@ -87,6 +87,8 @@ export function Trziste() {
     return s
   }, [trziste.data, user?.id, hledat, obor, dosah, razeni, misto, oblibene.data])
 
+  // Vybraná zakázka, která po filtrování zmizela, už vybraná není.
+  const vybranaPlatna = vybrana != null && zakazky.some((x) => x.z.id === vybrana) ? vybrana : null
   const naMape = useMemo(() => zakazky.map((x) => x.z), [zakazky])
   const celkem = (trziste.data ?? []).filter((z) => z.customer_id !== user?.id).length
 
@@ -96,9 +98,6 @@ export function Trziste() {
     karty.current.get(id)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   }
 
-  useEffect(() => {
-    if (vybrana != null && !zakazky.some((x) => x.z.id === vybrana)) setVybrana(null)
-  }, [zakazky, vybrana])
 
   const ulozit = (id: number, nazev: string | null) => {
     const ulozena = !oblibene.data?.has(id)
@@ -182,7 +181,7 @@ export function Trziste() {
             km={km}
             moje={moje.data?.get(z.id)}
             ulozena={!!oblibene.data?.has(z.id)}
-            vybrana={vybrana === z.id}
+            vybrana={vybranaPlatna === z.id}
             onUlozit={() => ulozit(z.id, z.title)}
             onVyber={() => setVybrana(z.id)}
           />
@@ -268,13 +267,13 @@ export function Trziste() {
               {seznam}
             </section>
             <section aria-label="Mapa zakázek" className="relative min-w-0 flex-1 border-line lg:border-l">
-              <MapaZakazek zakazky={naMape} poloha={misto} vybrana={vybrana} onVyber={vyberZMapy} />
-              {vybrana != null && (
+              <MapaZakazek zakazky={naMape} poloha={misto} vybrana={vybranaPlatna} onVyber={vyberZMapy} />
+              {vybranaPlatna != null && (
                 <VybranaNaMobilu
-                  z={zakazky.find((x) => x.z.id === vybrana)}
-                  moje={moje.data?.get(vybrana)}
-                  ulozena={!!oblibene.data?.has(vybrana)}
-                  onUlozit={() => ulozit(vybrana, zakazky.find((x) => x.z.id === vybrana)?.z.title ?? null)}
+                  z={zakazky.find((x) => x.z.id === vybranaPlatna)}
+                  moje={moje.data?.get(vybranaPlatna)}
+                  ulozena={!!oblibene.data?.has(vybranaPlatna)}
+                  onUlozit={() => ulozit(vybranaPlatna, zakazky.find((x) => x.z.id === vybranaPlatna)?.z.title ?? null)}
                   onZavrit={() => setVybrana(null)}
                 />
               )}

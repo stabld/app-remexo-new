@@ -37,7 +37,7 @@ export function MapaZakazek({ zakazky, poloha, vybrana, onVyber }: {
   const ohraniceni = useRef<L.LatLngBounds | null>(null)
   const posunuto = useRef(false)
   const vyber = useRef(onVyber)
-  vyber.current = onVyber
+  useEffect(() => { vyber.current = onVyber }, [onVyber])
 
   useEffect(() => {
     if (!el.current) return

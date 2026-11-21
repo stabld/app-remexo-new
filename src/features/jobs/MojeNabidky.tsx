@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Send } from 'lucide-react'
 import { Stranka } from '@/layouts/Stranka'
+import { PrepinacPrace } from './PrepinacPrace'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { ButtonLink } from '@/components/ui/Button'
@@ -76,6 +77,7 @@ export function MojeNabidky() {
 
   return (
     <Stranka nadpis="Moje nabídky" sirka="normalni">
+      <PrepinacPrace />
       <div className="flex max-w-[880px] flex-col gap-5">
         <div className="flex flex-wrap items-center gap-3">
           <SegmentTabs

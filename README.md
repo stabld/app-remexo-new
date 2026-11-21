@@ -1,32 +1,49 @@
-# React + TypeScript + Vite
+# Remexo – aplikace (nová verze)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React + TypeScript + Vite, hosting Vercel, backend Supabase (stejná databáze jako pilot `stabld/app-remexo`).
+Pilot a tahle appka můžou běžet vedle sebe: zapisují do databáze totéž a stejným způsobem.
 
-Currently, two official plugins are available:
+## Spuštění
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev        # vývoj
+npm run build      # produkční build do dist/
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+`.env` obsahuje jen veřejné údaje Supabase (URL a publishable klíč). Bezpečnost hlídá databáze (RLS a RPC funkce), ne frontend.
+
+## Nasazení na Vercel
+
+1. Nový projekt z repozitáře `stabld/app-remexo-new`, framework Vite (nastaví se samo).
+2. Proměnné prostředí:
+   - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` – stejné jako v `.env`
+   - pro Bořka (`api/borek-ai.js`): `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `AI_MODEL_TOKEN` – stejné jako u pilota
+3. V Supabase → Authentication → URL Configuration přidat adresu nové appky do Redirect URLs (kvůli přihlášení přes Google/Facebook a obnově hesla).
+
+## Struktura
+
+```
+src/
+  app/            router, navigace, providery (téma)
+  layouts/        AppShell, boční a spodní navigace, obal stránky
+  components/     sdílené UI (tlačítka, karty, modaly, fotky, toasty)
+  config/         oblast působnosti (Olomouc + 35 km)
+  lib/            Supabase klient, typy, práce s popisem poptávky, datum
+  services/       geokódování, fotky, Bořek, měření
+  features/
+    auth/         přihlášení, registrace, role
+    requests/     zákazník: přehled, poptávky, detail, nová poptávka s Bořkem
+    market/       řemeslník: tržiště (seznam + mapa), detail zakázky, odeslání nabídky
+    jobs/         řemeslník: přehled, moje nabídky, moje zakázky, výdělky
+    chat/         zprávy
+    profile/      profil, nastavení vzhledu
+    podpora/      Bořek poradce, nahlášení problému
+    admin/        správa (jen pro adminy, práva hlídají admin_* funkce v DB)
+```
+
+## Co je jinak než v pilotu
+
+- Výdělky ukazují součet cen z nabídek u dokončených zakázek. Remexo platby zatím neeviduje a stránka to říká.
+- Řemeslník u nabídky může vyplnit „Kdy můžu přijít“ – připojí se na konec zprávy (DB na to nemá sloupec).
+- Přepnutí role jde i z profilu (stejná RPC `zmen_roli`).
